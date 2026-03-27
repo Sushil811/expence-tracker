@@ -95,3 +95,32 @@ export const updateExpense =  async(req, res)=>{
     res.status(500).json({ success: false, message: 'Server error.' });
   }
 }
+
+
+//Delete expense
+export const deleteExpense = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const deletedExpense = await expenseModel.findOneAndDelete({ _id: id, userId });
+
+    if (!deletedExpense) {
+      return res.status(404).json({
+        success: false,
+        message: "Expense not found or not authorized."
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Expense deleted successfully."
+    });
+  } catch (err) {
+    console.error("Delete Expense Error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+
+
