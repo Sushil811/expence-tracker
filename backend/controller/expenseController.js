@@ -122,5 +122,61 @@ export const deleteExpense = async (req, res) => {
   }
 };
 
+//Download excel for expense
+export const downloadExpenseExcel = async(req, res)=>{
+    try{
+        const userId = req.user.id;
+        const expense = await expenseModel.find({userId}).sort({date: -1});
+        const plainData = expense.map((exp)=>({
+            Description: exp.description,
+            Amount: exp.amount,
+            Category: exp.category,
+            Date: new Date(exp.date).toLocaleDateString(),
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(plainData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'expenseModel');
+        XLSX.writeFile(workbook, 'expense_details.xlsx');
+        res.download('expense_details.xlsx')
+    }catch (err) {
+    console.error("Download Expense Error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+}
+
+//To get expense overviews
+export const getExpenseOverview = async(req, res)=>{
+    try{
+        const userId = req.user.id;
+        const {range = 'monthly'} = req.query;
+        const{start, end} = getDateRange(range);
+
+        const expense = await expenseModel.find({
+            userId,
+            date: {$gte: start, $lte: end},
+        }).sort({date:-1})
+
+        const totalExpense = expense.reduce((acc, cur)=> acc + cur.amount, 0);
+        const averageExpense = expense.length > 0 ? totalIncome / expense.length: 0;
+        const numberOfTransactions = expense.length;
+
+        const recentTransactions = expense.slice(0, 9);
+        res.json({
+            success:true, 
+            data: {
+                totalExpense,
+                averageExpense,
+                numberOfTransactions,
+                recentTransactions,
+                range
+            }
+        })
+
+    }catch (err) {
+    console.error("Download Expense Error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+}
+
 
 
