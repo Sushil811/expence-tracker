@@ -108,7 +108,7 @@ export const deleteExpense = async (req, res) => {
     if (!deletedExpense) {
       return res.status(404).json({
         success: false,
-        message: "Expense not found or not authorized.shi"
+        message: "Expense not found or not authorized."
       });
     }
 
