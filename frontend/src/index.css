@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* ===== Dark Mode: Native form controls ===== */
+
+/* Tell the browser to use dark color scheme for native widgets */
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="time"],
+.dark select {
+  color-scheme: dark;
+}
+
+/* Light mode: ensure light scheme */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+select {
+  color-scheme: light;
+}
+
+/* Dark mode date input styling */
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.8);
+  cursor: pointer;
+}
+
+/* Dark mode select option styling (for dropdown items) */
+.dark select option {
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Light mode select option styling */
+select option {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+
+/* ===== Hide scrollbar utilities ===== */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
